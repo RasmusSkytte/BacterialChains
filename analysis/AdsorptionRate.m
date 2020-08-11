@@ -158,7 +158,7 @@ ytickformat(ax1, '%.2f')
 ax1.YLabel.Position(1) = -0.8;
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S8/FigS8a.png')
+print(fh, '../figures/Figure_S8/FigS8a.tif', '-dtiff', '-r900')
 
 
 % Plot the adsorption rates
@@ -214,7 +214,7 @@ ax.FontSize = 16;
 
 set(ax,'Layer','top');
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_5/Fig5a.png')
+print(fh, '../figures/Figure_5/Fig5a.tif', '-dtiff', '-r900')
 
 
 % Plot the adsorption scaling
@@ -337,7 +337,7 @@ set(ax1,'Layer','top');
 set(ax2,'Layer','top');
 set(ax3,'Layer','top');
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_5/Fig5b.png')
+print(fh, '../figures/Figure_5/Fig5b.tif', '-dtiff', '-r900')
 
 
 % Plot the number of hits
@@ -414,13 +414,13 @@ ytickformat(ax1, '%.1f')
 
 ax1.YTickLabel = cellfun(@(N)sprintf('10^%d', N), num2cell(log10(N(ax1.YTick))), 'UniformOutput', false);
 
-ax1.Position = [0.15  0.15 0.09  0.8];
-ax2.Position = [0.285 0.15 0.439 0.8];
-ax3.Position = [0.77  0.15 0.09  0.8];
-c.Position([1 3]) = [0.88 0.025];
+ax1.Position = [0.15  0.15 0.09  0.78];
+ax2.Position = [0.285 0.15 0.439 0.78];
+ax3.Position = [0.77  0.15 0.09  0.78];
+c.Position([1 3 4]) = [0.88 0.025 0.78];
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S8/FigS8b.png')
+print(fh, '../figures/Figure_S8/FigS8b.tif', '-dtiff', '-r900')
 
 
 % Store the exponent

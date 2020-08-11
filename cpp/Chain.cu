@@ -5,8 +5,8 @@ using namespace std;
 int main(int argc, char** argv){
 
     // Length of the chains
-    std::vector<int>     N    = {     1,     3,    10,    32,   100,   316,  1000,  3162};
-    std::vector<int>     runs = {     9,     9,     9,     9,     9,     9,     9,     9};
+    std::vector<int>     N    = {     1,     3,    10,    32,   100,   316,  1000};
+    std::vector<int>     runs = {     9,     9,     9,     9,     9,     9,     9};
 
     std::vector<numtype> theta   = {1.0, 0.8, 0.6, 0.4, 0.2};
 
@@ -54,6 +54,13 @@ int main(int argc, char** argv){
                 // Check if runs exists and is completed
                 bool exists = false;
                 struct stat info;
+
+                // Run is a persistence length run
+                if ((r >= runs[n]) && (stat(path_s1.c_str(), &info) == 0 && S_ISREG(info.st_mode))) {
+                    continue;
+                }
+
+                // Run is an absorption run
                 if ((stat(path_s1.c_str(), &info) == 0 && S_ISREG(info.st_mode)) and (stat(path_s2.c_str(), &info) == 0 && S_ISREG(info.st_mode))) { // Base run is completed
 
                     // Count sub runs that are completed

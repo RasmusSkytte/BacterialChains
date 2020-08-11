@@ -1,4 +1,4 @@
-function [p, dp] = fit_ratio(y, dy, f, df, p0)
+function [p, dp] = fit_ratio(y, dy, f, df, p0, reportFitResults)
 
     % Minimize the function abs(y / f(x, p) - 1)
     
@@ -31,12 +31,14 @@ function [p, dp] = fit_ratio(y, dy, f, df, p0)
     dp = mean(dp);
     
     % Report fit result
-    fprintf('-------------------------------\n')
-    fprintf('---------- Ratio fit-----------\n')
-    fprintf('chi^2 = %.3g, ndf = %d\n', chi2(p), numel(y)-numel(p))
-    fprintf('chi^2 / ndf = %.3g\n', chi2(p) / (numel(y)-numel(p)))
-    fprintf('--\n')
-    for i = 1:numel(p)
-        fprintf('p_%d: (%.5g +- %.5g)\n', i, p(i), dp(i))
+    if reportFitResults
+        fprintf('-------------------------------\n')
+        fprintf('---------- Ratio fit-----------\n')
+        fprintf('chi^2 = %.3g, ndf = %d\n', chi2(p), numel(y)-numel(p))
+        fprintf('chi^2 / ndf = %.3g\n', chi2(p) / (numel(y)-numel(p)))
+        fprintf('--\n')
+        for i = 1:numel(p)
+            fprintf('p_%d: (%.5g +- %.5g)\n', i, p(i), dp(i))
+        end
     end
 end

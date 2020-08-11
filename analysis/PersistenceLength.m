@@ -2,7 +2,12 @@
 close all;
 clearvars;
 
-D = 1e4;
+D = 13000;
+L = 1.5;
+R = 0.45;
+A = 4*pi*R^2 + 2*pi*R*L;
+eta_1 = sqrt(4*pi*A)*D; % Following Berezhkovskii (2007)
+
 xint = [1e-2 1e4];
 
 if ~exist('../figures/Figure_5', 'dir')
@@ -87,15 +92,12 @@ for i = 1:numel(N)
                 fh.Resize = 'off';
                 hold on; box on;
                 ax = gca;
-                ax.Position = [0.20 0.17 0.77 0.8];
+                ax.Position = [0.23 0.17 0.74 0.8];
 
                 l = linspace(min(distance), max(distance));
 
                 scatter(distance, R2, '.', 'MarkerEdgeColor', cc(t, :))
                 plot(l, 2 * P(i, j, t) * l .* (1 - P(i, j, t) ./ l .* (1 - exp(- l / P(i, j, t)))), 'k', 'LineWidth', 2)
-
-
-                ax.Position(4) = 0.76;
 
                 xlabel('l ({\mu}m)')
                 ylabel('R^2 ({\mu}m^2)')
@@ -106,9 +108,9 @@ for i = 1:numel(N)
 
                 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
                 if round(theta(t), 1) == 0.2
-                    saveas(fh, '../figures/Figure_S4/FigS4a.png')
+                    print(fh, '../figures/Figure_S4/FigS4a.tif', '-dtiff', '-r900')
                 elseif round(theta(t), 1) == 0.6
-                    saveas(fh, '../figures/Figure_S4/FigS4b.png')
+                    print(fh, '../figures/Figure_S4/FigS4b.tif', '-dtiff', '-r900')
                 end
 
             end
@@ -146,7 +148,7 @@ ax.FontSize = 16;
 
 
 % Measure in cell numbers
-ell = 1.5+0.9;
+ell = L+2*R;
 P   =   P ./ ell;
 d_P = d_P ./ ell;
 
@@ -159,7 +161,7 @@ I1  = N_adj > 1;
 I10 = N_adj > 10;
 
 % Load measured adsorption rates
-load(['AdsorptionRate.mat']);
+load('AdsorptionRate.mat');
 
 % Extract the relevant adsorption rates
 eta   =   eta(1:numel(theta), 1+(1:numel(N)));
@@ -186,14 +188,12 @@ fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.8];
+ax.Position = [0.19 0.17 0.77 0.8];
 
 for i = 1:numel(theta)
     errorbar(ax, NN(i, :), Rg(i, :), d_Rg(i, :), 's', 'MarkerFaceColor', cc(i, :), 'Color', cc(i, :), 'LineWidth', 1.5);
 end
 xlim([1 N(end)])
-
-ax.Position(4) = 0.76;
 
 ax.XScale = 'log';
 ax.YScale = 'log';
@@ -204,7 +204,7 @@ ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S5/FigS5a.png')
+print(fh, '../figures/Figure_S5/FigS5a.tif', '-dtiff', '-r900')
 
 
 % Plot R_g' as a function of N'
@@ -212,7 +212,7 @@ fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.8];
+ax.Position = [0.20 0.17 0.76 0.8];
 
 % Compute x and y errors for error bars
 % x = N / P
@@ -232,8 +232,6 @@ for i = 1:numel(theta)
 end
 xlim([1 N(end)])
 
-ax.Position(4) = 0.76;
-
 ax.XScale = 'log';
 ax.YScale = 'log';
 
@@ -243,7 +241,7 @@ ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S5/FigS5b.png')
+print(fh, '../figures/Figure_S5/FigS5b.tif', '-dtiff', '-r900')
 
 
 
@@ -252,7 +250,7 @@ fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.8];
+ax.Position = [0.18 0.17 0.78 0.8];
 
 % Compute x and y errors for error bars
 % x = N / P
@@ -276,13 +274,13 @@ dyy = dy(I10(:));
 
 % Define fit function
 fun   = @(x, p) p(1) .* x.^p(2);
-% and the error on the fit function
+% and the error on the fit function (dfun_dx)
 d_fun = @(x, dx, p) abs( (p(1) * p(2) .* x.^(p(2)-1)) .* dx);
 
 % Extract the best parameters set p
 fprintf('-------------------------------\n')
 fprintf('--- R_g / P vs N / P (long) ---\n')
-[p_Rg, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [0.5 0.5]);
+[p_Rg, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [0.5 0.5], true);
 
 % Compute the ratio
 ratio = y ./ fun(x, p_Rg);
@@ -297,7 +295,6 @@ for i = 1:numel(theta)
     errorbar(ax, x(i,  I10(i, :)), ratio(i,  I10(i, :)), d_ratio(i,  I10(i, :)), d_ratio(i,  I10(i, :)), dx(i,  I10(i, :)), dx(i,  I10(i, :)), 's', 'MarkerFaceColor', cc(i, :), 'Color', cc(i, :), 'LineWidth', 1.5);
     errorbar(ax, x(i, ~I10(i, :)), ratio(i, ~I10(i, :)), d_ratio(i, ~I10(i, :)), d_ratio(i, ~I10(i, :)), dx(i, ~I10(i, :)), dx(i, ~I10(i, :)), '^', 'MarkerFaceColor', 'None',   'Color', cc(i, :), 'LineWidth', 1.5);
 end
-ax.Position(4) = 0.76;
 
 ax.XScale = 'log';
 
@@ -307,7 +304,7 @@ ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S5/FigS5c.png')
+print(fh, '../figures/Figure_S5/FigS5c.tif', '-dtiff', '-r900')
 
 
 
@@ -341,13 +338,11 @@ dyy = dy(~I10(:));
 
 % Define fit function
 fun   = @(x, p) p(1) .* x.^p(2);
-% and the error on the fit function
+% and the error on the fit function (dfun_dx)
 d_fun = @(x, dx, p) abs( (p(1) * p(2) .* x.^(p(2)-1)) .* dx);
 
 % Extract the best parameters set p
-fprintf('-------------------------------\n');
-fprintf('--- R_g / P vs N / P (short) --\n')
-[p, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [0.5 0.5]);
+[p, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [0.5 0.5], false);
 
 % Compute the ratio
 ratio = y ./ fun(x, p);
@@ -362,7 +357,6 @@ for i = 1:numel(theta)
     errorbar(ax, x(i, ~I10(i, :)), ratio(i, ~I10(i, :)), d_ratio(i, ~I10(i, :)), d_ratio(i, ~I10(i, :)), dx(i, ~I10(i, :)), dx(i, ~I10(i, :)), 's', 'MarkerFaceColor', cc(i, :), 'Color', cc(i, :), 'LineWidth', 1.5);
     errorbar(ax, x(i,  I10(i, :)), ratio(i,  I10(i, :)), d_ratio(i,  I10(i, :)), d_ratio(i,  I10(i, :)), dx(i,  I10(i, :)), dx(i,  I10(i, :)), '^', 'MarkerFaceColor', 'None',   'Color', cc(i, :), 'LineWidth', 1.5);
 end
-ax.Position(4) = 0.76;
 
 ax.XScale = 'log';
 
@@ -402,13 +396,11 @@ dyy = dy(I10(:));
 
 % Define fit function
 fun   = @(x, p) p(1) .* x.^p(2);
-% and the error on the fit function
+% and the error on the fit function (dfun_dx)
 d_fun = @(x, dx, p) abs( (p(1) * p(2) .* x.^(p(2)-1)) .* dx);
 
 % Extract the best parameters set p
-fprintf('-------------------------------\n');
-fprintf('--- eta / P vs N / P (long) ---\n')
-[p3D, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [1e5 0.5]);
+[p3D, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [1e5 0.5], false);
 
 % Use our fit on the short chains
 xx  =  x(~I10(:));
@@ -419,13 +411,12 @@ dyy = dy(~I10(:));
 
 % Define fit function
 fun   = @(x, p) p(1) .* x.^p(2);
-% and the error on the fit function
+
+% and the error on the fit function (dfun_dx)
 d_fun = @(x, dx, p) abs( (p(1) * p(2) .* x.^(p(2)-1)) .* dx);
 
 % Extract the best parameters set p
-fprintf('-------------------------------\n');
-fprintf('--- eta / P vs N / P (short) --\n')
-[p2D, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [5e4 0.75]);
+[p2D, ~] = fit_ratio(yy, dyy, @(p)fun(xx, p), @(p)d_fun(xx, dxx, p), [5e4 0.75], false);
 
 % Plot reference line
 plot(ax, xint, fun(xint, p3D), 'k',   'LineWidth', 1.5, 'DisplayName', 'Gaussian Chain');
@@ -451,7 +442,6 @@ fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.8];
 
 % x = N / P
 x = N_adj;
@@ -459,8 +449,8 @@ x = N_adj;
 % dx comes only from P
 dx = (d_P ./ P) .* x;
 
-% y values is eta / (4 * pi * D * Rg)
-y  = eta ./ (4 * pi * D * Rg);
+% y values is eta / (eta_1 * Rg)
+y  = eta ./ (eta_1 * Rg);
 
 % dy comes from eta and Rg
 dy = sqrt((d_eta ./ eta).^2 + (d_P ./ P).^2) .* y;
@@ -469,24 +459,25 @@ dy = sqrt((d_eta ./ eta).^2 + (d_P ./ P).^2) .* y;
 plot(xint, [1 1], 'k', 'LineWidth', 1);
 
 for i = 1:numel(theta)
-    errorbar(ax, x(i, :), y(i, :), dy(i, :), dy(i, :), dx(i, :), dx(i, :), 's', 'MarkerFaceColor', cc(i, :), 'Color', cc(i, :), 'LineWidth', 1.5);
+    h(i) = errorbar(ax, x(i, :), y(i, :), dy(i, :), dy(i, :), dx(i, :), dx(i, :), 's', 'MarkerFaceColor', cc(i, :), 'Color', cc(i, :), 'LineWidth', 1.5, 'DisplayName', sprintf('\\Theta / 2 = %.1f \\pi', theta(i) / 2));
 end
-
-ax.Position(4) = 0.76;
 
 ax.XScale = 'log';
 ax.YScale = 'lin';
 
 xlabel(ax, 'N^\prime')
-ylabel(ax, '\eta / 4 \pi D R_g')
+ylabel(ax, '$\eta / \sqrt{4\pi A} D R_g$', 'Interpreter', 'Latex')
 ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 ytickformat(ax, '%.1f')
 
-pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S10/FigS10.png')
+l = legend(h, 'Location', 'NorthEastOutside');
 
+ax.Position = [0.13 0.17 0.613 0.8];
+
+pause(0.1); fh.Position = [10 50 725.5 420]; pause(0.1); l.Position(1) = 0.755; pause(0.1); 
+print(fh, '../figures/Figure_S10/FigS10.tif', '-dtiff', '-r900')
 
 
 
@@ -517,15 +508,15 @@ yy  =  y(I10(:));
 dyy = dy(I10(:));
 
 % Define fit function
-fun   = @(x, n, p) 4 * pi * D * x .* (n ./ x).^p;
+fun   = @(x, n, p) eta_1 * x .* (n ./ x).^p;
 
-% and the error on the fit function
-d_fun = @(x, n, dx, p) 4 * pi * D * (1-p) * (n ./ x).^p .* dx;
+% and the error on the fit function (dfun_dx)
+d_fun = @(x, n, dx, p) eta_1 * (1-p) * (n ./ x).^p .* dx;
 
 % Extract the best parameters set p
 fprintf('-------------------------------\n');
 fprintf('-- P(N / P)^g vs N / P (long) -\n')
-[p, ~] = fit_ratio(yy, dyy, @(p)fun(xx, n, p), @(p)d_fun(xx, n, dxx, p), 0.5);
+[p, ~] = fit_ratio(yy, dyy, @(p)fun(xx, n, p), @(p)d_fun(xx, n, dxx, p), 0.5, true);
 
 % Compute the ratio
 ratio = y ./ fun(x, NN, p);
@@ -550,12 +541,12 @@ end
 ax.XScale = 'log';
 
 xlabel(ax, 'N^\prime')
-ylabel(ax, '\eta  / 4 \pi D P (N^\prime)^{\gamma_P}')
+ylabel(ax, '$\eta  / \sqrt{4\pi A} D P (N^\prime)^{\gamma_P}$', 'Interpreter', 'Latex')
 ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 pause(0.1); fh.Position = [10 50 480 420]; pause(0.1);
-saveas(fh, '../figures/Figure_5/Fig5c.png')
+print(fh, '../figures/Figure_5/Fig5c.tif', '-dtiff', '-r900')
 
 
 % Store the radius of gyration

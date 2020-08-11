@@ -74,7 +74,7 @@ for t = 1:numel(theta) + 2
     end
     e = errorbar(ax, N(1:end), overlap(t, :), d_overlap(t, :), symbol, 'LineWidth', 1.5, 'DisplayName', name, 'MarkerFaceColor', 'auto');
 end
-
+, '-dtiff', '-r900'
 xlabel(ax, 'N')
 ylabel(ax, 'max(overlap) / R')
 
@@ -88,8 +88,8 @@ ax.XLim = [1 1000];
 ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
-legend('Location', 'NorthEastOutside')
+l = legend('Location', 'NorthEastOutside');
 ax.Position = [0.12 0.17 0.55 0.8];
 
-pause(0.1); fh.Position = [10 50 720 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S1/FigS1.png')
+pause(0.1); fh.Position = [10 50 720 420]; l.Position(1) = 0.7; pause(0.1);
+print(fh, '../figures/Figure_S1/FigS1.tif', '-dtiff', '-r900')

@@ -59,4 +59,4 @@ ax.LineWidth = 1.5;
 ax.FontSize = 16;
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S7/FigS7.png')
+print(fh, '../figures/Figure_S7/FigS7.tif', '-dtiff', '-r900')

@@ -206,10 +206,10 @@ for n = 1:numel(N)
                     ax.Visible = 'off';
                     if t <= numel(theta) && theta(t) == 0.2
                         view([40 90])
-                        ax.Position = [-0.35 -0.25 1.5 1.5];
+                        ax.Position = [-0.3 -0.3 1.5 1.5]*1.1;
                     elseif t <= numel(theta) && theta(t) == 0.4
                         view([140 0])
-                        ax.Position = [-0.1 -0.15 1.3 1.3];
+                        ax.Position = [-0.1 -0.225 1.3 1.3]*1.1;
                     elseif t == numel(theta)
                         fh.Position(4) = 280;
                         view([1 1 1])
@@ -217,16 +217,16 @@ for n = 1:numel(N)
                     elseif t == numel(theta) + 2
                         fh.Position(4) = 140;
                         view([12 60])
-                        ax.Position = [-0.125 -0.15 1.25 1.25];
+                        ax.Position = [-0.15 -0.2 1.25 1.25]*1.1;
                     end
 
                     pause(0.1); fh.Position(1:3) = [10 50 280]; pause(0.1);
                     if t == 2
-                        saveas(fh, '../figures/Figure_7/Fig7b.png')
+                        print(fh, '../figures/Figure_7/Fig7b.tif', '-dtiff', '-r900')
                     elseif t == numel(theta)
-                        saveas(fh, '../figures/Figure_7/Fig7c.png')
+                        print(fh, '../figures/Figure_7/Fig7c.tif', '-dtiff', '-r900')
                     elseif t == numel(theta) + 2
-                        saveas(fh, '../figures/Figure_7/Fig7d.png')
+                        print(fh, '../figures/Figure_7/Fig7d.tif', '-dtiff', '-r900')
                     end
                 end
 
@@ -265,6 +265,7 @@ end
 fh = figure;
 fh.Resize = 'off';
 ax = axes;
+ax.Position = [0.16 0.17 0.79 0.8];
 ax.Box = 'on';
 ax.NextPlot = 'add';
 
@@ -302,14 +303,14 @@ ax.YLim = [1000 wm(1)];
 
 ax.YScale = 'log';
 
-xtickformat(ax, '%.1f')
+xtickformat(ax, '%d')
 
-annotation('textarrow', [0.6 0.55], [0.88 0.92], 'String', 'Well-mixed', 'FontSize', 14);
+annotation('textarrow', [0.6 0.55], [0.92 0.97], 'String', 'Well-mixed', 'FontSize', 14);
 annotation('textarrow', [0.7 0.6],  [0.52 0.67], 'String', 'Chains', 'FontSize', 14);
-annotation('textarrow', [0.4 0.45], [0.23 0.28], 'String', 'Spherical Colony', 'FontSize', 14);
+annotation('textarrow', [0.45 0.5], [0.25 0.30], 'String', 'Spherical Colony', 'FontSize', 14);
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_8/Fig8b.png')
+print(fh, '../figures/Figure_8/Fig8b.tif', '-dtiff', '-r900')
 
 % Plot the effective burstsize
 fh = figure;
@@ -326,9 +327,9 @@ ax1.Box = 'on';
 ax2.Box = 'on';
 ax3.Box = 'on';
 
-ax1.Position = [0.16  0.15 0.1    0.775];
-ax2.Position = [0.325 0.15 0.4875 0.775];
-ax3.Position = [0.87  0.15 0.1    0.775];
+ax1.Position = [0.16  0.15 0.1    0.82];
+ax2.Position = [0.325 0.15 0.4875 0.82];
+ax3.Position = [0.87  0.15 0.1    0.82];
 
 cc = lines(numel(theta) + 2); cc(6, :) = cc(3, :); cc(4, :) = cc(2, :); cc(2, :) = cc(1, :);
 
@@ -387,7 +388,7 @@ xtickformat(ax2, '%.1f')
 ytickformat(ax1, '%.1f')
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_7/Fig7a.png')
+print(fh, '../figures/Figure_7/Fig7a.tif', '-dtiff', '-r900')
 
 
 % Plot the multiple hits
@@ -405,9 +406,9 @@ ax1.Box = 'on';
 ax2.Box = 'on';
 ax3.Box = 'on';
 
-ax1.Position = [0.16  0.15 0.1    0.775];
-ax2.Position = [0.325 0.15 0.4875 0.775];
-ax3.Position = [0.87  0.15 0.1    0.775];
+ax1.Position = [0.16  0.15 0.1    0.82];
+ax2.Position = [0.325 0.15 0.4875 0.82];
+ax3.Position = [0.87  0.15 0.1    0.82];
 
 cc = lines(numel(theta) + 2); cc(6, :) = cc(3, :); cc(4, :) = cc(2, :); cc(2, :) = cc(1, :);
 for n = [2 3 4] %1:numel(N)
@@ -464,8 +465,8 @@ ax3.YLim = [0 1];
 xtickformat(ax2, '%.1f')
 ytickformat(ax1, '%.1f')
 
-pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_8/Fig8a.png')
+pause(0.1); fh.Position = [10 50 560 420]; ax1.YLabel.FontSize = 16; ax1.YLabel.Position(2) = 0.45; pause(0.1);
+print(fh, '../figures/Figure_8/Fig8a.tif', '-dtiff', '-r900')
 
 % Store the effective burst size
 save('EffectiveBurstSize.mat', 'm_Escape', 's_Escape')

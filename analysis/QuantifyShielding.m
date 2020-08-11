@@ -57,16 +57,18 @@ for n = 1:numel(N)
                 axis equal;
                 ax.Visible = 'off';
                 if t == 2
+                    ax.Position = [0 0 1 1];
                     view([3 1 1])
                 elseif t == numel(theta) + 2
+                    ax.Position = [0.2 0.2 0.6 0.6];
                     view([-0.2 -11 6.5])
                 end
 
                 pause(0.1); fh.Position(1:3) = [10 50 280]; pause(0.1);
                 if t == numel(theta) + 2
-                    saveas(fh, '../figures/Figure_6/Fig6c.png')
+                    print(fh, '../figures/Figure_6/Fig6c.tif', '-dtiff', '-r900')
                 else
-                    saveas(fh, '../figures/Figure_6/Fig6b.png')
+                    print(fh, '../figures/Figure_6/Fig6b.tif', '-dtiff', '-r900')
                 end
 
             end
@@ -89,9 +91,9 @@ ax1.Box = 'on';
 ax2.Box = 'on';
 ax3.Box = 'on';
 
-ax1.Position = [0.16  0.15 0.1    0.775];
-ax2.Position = [0.325 0.15 0.4875 0.775];
-ax3.Position = [0.87  0.15 0.1    0.775];
+ax1.Position = [0.16  0.15 0.1    0.82];
+ax2.Position = [0.325 0.15 0.4875 0.82];
+ax3.Position = [0.87  0.15 0.1    0.82];
 
 cc = lines(numel(theta) + 2);
 for n = [1 2 3]
@@ -151,4 +153,4 @@ xtickformat(ax2, '%.1f')
 ytickformat(ax1, '%.1f')
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_6/Fig6a.png')
+print(fh, '../figures/Figure_6/Fig6a.tif', '-dtiff', '-r900')

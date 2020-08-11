@@ -22,6 +22,7 @@ d_angle = nan(length(theta), repeats);
 % Prepare figure
 fh1 = figure(1); clf; hold on; box on;
 ax1 = gca;
+ax1.Position = [0.17 0.17 0.79 0.8];
 
 % Allocate array to store the angles
 angles  = nan((N-1) * repeats, numel(theta));
@@ -36,6 +37,7 @@ cc = cc(end-2:-1:1, :);
 fh2 = figure;
 fh.Resize = 'off';
 ax2 = gca;
+ax2.Position = [0.17 0.17 0.79 0.8];
 ax2.NextPlot = 'add';
 ax2.Box = 'on';
 
@@ -101,7 +103,7 @@ ax2.XLim = [0 125];
 ax2.XTick = 0:25:125;
 
 pause(0.1); fh2.Position = [10 50 750 420]; pause(0.1);
-saveas(fh2, '../figures/Figure_S6/FigS6.png')
+print(fh2, '../figures/Figure_S6/FigS6.tif', '-dtiff', '-r900')
 
 % Plot the convergence
 errorbar(ax1, theta, mean(angles(:, :)), std(angles(:, :)) / sqrt(repeats * (N-1)), 'kx', 'LineWidth', 2, 'MarkerSize', 2, 'MarkerFaceColor', 'Auto', 'DisplayName', sprintf('n = %d', repeats))
@@ -114,4 +116,4 @@ ax1.LineWidth = 1.5;
 ax1.FontSize = 16;
 
 pause(0.1); fh1.Position = [10 50 560 420]; pause(0.1);
-saveas(fh1, '../figures/Figure_S2/FigS2.png')
+print(fh1, '../figures/Figure_S2/FigS2.tif', '-dtiff', '-r900')

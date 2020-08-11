@@ -49,7 +49,7 @@ fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.75];
+ax.Position = [0.17 0.17 0.79 0.8];
 cc = lines(numel(theta));
 
 for t = 1:numel(theta)
@@ -74,14 +74,13 @@ ax.FontSize = 16;
 ax.YLabel.Position(1) = 1.2*ax.YLabel.Position(1);
 
 pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S3/FigS3a.png')
+print(fh, '../figures/Figure_S3/FigS3a.tif', '-dtiff', '-r900')
 
 % Plot assuming Flory scaling
 fh = figure;
 fh.Resize = 'off';
 hold on; box on;
 ax = gca;
-ax.Position = [0.17 0.17 0.79 0.75];
 cc = lines(numel(theta));
 
 for t = 1:numel(theta)
@@ -107,7 +106,7 @@ ax.FontSize = 16;
 ax.YLabel.Position(1) = 1.2*ax.YLabel.Position(1);
 
 legend([hs.mainLine], 'Location', 'NorthEastOutside')
-ax.Position = [0.13 0.17 0.613 0.75];
+ax.Position = [0.13 0.17 0.613 0.8];
 
 pause(0.1); fh.Position = [10 50 725.5 420]; pause(0.1);
-saveas(fh, '../figures/Figure_S3/FigS3b.png')
+print(fh, '../figures/Figure_S3/FigS3b.tif', '-dtiff', '-r900')

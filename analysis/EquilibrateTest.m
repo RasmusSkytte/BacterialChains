@@ -17,7 +17,8 @@ eta   = nan(numel(T_Eq), repeats);
 d_eta = nan(numel(T_Eq), repeats);
 
 % Prepare path
-path = strrep(pwd, 'analysis', 'cpp/data');
+path = strrep(pwd, 'analysis', 'cpp/data');ls
+ls
 
 % Loop over runs
 for n = 1:numel(N)
@@ -68,9 +69,9 @@ for n = 1:numel(N)
 
     pause(0.1); fh.Position = [10 50 560 420]; pause(0.1);
     if n == 1
-        saveas(fh, '../figures/Figure_S9/FigS9a.png')
+        print(fh, '../figures/Figure_S9/FigS9a.tif', '-dtiff', '-r900')
     elseif n == 2
-        saveas(fh, '../figures/Figure_S9/FigS9b.png')
+        print(fh, '../figures/Figure_S9/FigS9b.tif', '-dtiff', '-r900')
     end
 
 end

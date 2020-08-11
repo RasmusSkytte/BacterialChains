@@ -13,6 +13,10 @@ all :
 
 	make process
 
+	make analyze
+
+	make finalize
+
 Simulation.o : Simulation.cu Simulation.hpp
 	$(CC) $(CFLAGS) -c Simulation.cu $(CLINKS)
 
@@ -42,12 +46,19 @@ run : tests experiments
 
 	### Run the tests ###
 	# Test 1: Angle between cells, volume scaling and visual examples
+	#
 	./BendingAngleValidation
+	#
 	# Test 2: Determine the maximum size of the timestep
+	#
 	./TimeStepEstimation
+	#
 	# Test 3: Determine the effect of equilbrating
+	#
 	./EquilibrateTest
+	#
 	### Run the adsorption experiments ###
+	#
 	./WellMixed
 	./Chain
 	./SphericalColony
@@ -95,7 +106,7 @@ analyze :
 	#
 	### Analyze the persistence length of the chains ###
 	#
-	matlab -nodesktop -nosplash -r "run('../analysis/PersistenceLength.m'); exit" > /dev/null 2>&1
+	matlab -nodesktop -nosplash -r "run('../analysis/PersistenceLength.m'); exit"
 	#
 	### Analyze the steady-stateness of the adsorption measurements ###
 	#
@@ -112,110 +123,146 @@ analyze :
 
 finalize :
 
+	### Prepare illustration
+	convert ../figures/Figure_1/Fig1_Export.png -flatten ../figures/Figure_1/Fig1.tif
+	#
+	convert ../figures/Figure_1/Fig1.tif -gravity northwest -stroke none -fill black -pointsize 300 -annotate +80+80   "A" ../figures/Figure_1/Fig1.tif
+	convert ../figures/Figure_1/Fig1.tif -gravity northwest -stroke none -fill black -pointsize 300 -annotate +80+1700 "B" ../figures/Figure_1/Fig1.tif
+	#
+	convert ../figures/Figure_1/Fig1.tif -density 900  ../figures/Figure_1/Fig1.tif
+	convert ../figures/Figure_1/Fig1.tif -compress lzw ../figures/Figure_1/Fig1.tif
+	#
+	convert ../figures/Figure_2/Fig2_Export.png -flatten ../figures/Figure_2/Fig2.tif
+	#
+	convert ../figures/Figure_2/Fig2.tif -density 900  ../figures/Figure_2/Fig2.tif
+	convert ../figures/Figure_2/Fig2.tif -compress lzw ../figures/Figure_2/Fig2.tif
+	#
 	### Visualize three example chains ###
 	mkdir -p ../figures/Figure_4 > /dev/null 2>&1
 	#
-	cp data/BendingAngleValidation/theta_0.300_pi/repeat_6/Render.png ../figures/Figure_4/theta_0_300_pi.png
-	cp data/BendingAngleValidation/theta_0.600_pi/repeat_6/Render.png ../figures/Figure_4/theta_0_600_pi.png
-	cp data/BendingAngleValidation/theta_0.900_pi/repeat_2/Render.png ../figures/Figure_4/theta_0_900_pi.png
-	cp data/SphericalColony/N_100/repeat_0/Render.png ../figures/Figure_4/SphericalColony.png
+	cp data/BendingAngleValidation/theta_0.300_pi/repeat_6/Render.png ../figures/Figure_4/theta_0_300_pi.tif
+	cp data/BendingAngleValidation/theta_0.600_pi/repeat_6/Render.png ../figures/Figure_4/theta_0_600_pi.tif
+	cp data/BendingAngleValidation/theta_0.900_pi/repeat_2/Render.png ../figures/Figure_4/theta_0_900_pi.tif
+	cp data/SphericalColony/N_100/repeat_0/Render.png ../figures/Figure_4/SphericalColony.tif
 	#
-	convert ../figures/Figure_4/theta_0_300_pi.png  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_300_pi.png
-	convert ../figures/Figure_4/theta_0_600_pi.png  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_600_pi.png
-	convert ../figures/Figure_4/theta_0_900_pi.png  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_900_pi.png
-	convert ../figures/Figure_4/SphericalColony.png -crop 1800x1400+0+200 +repage ../figures/Figure_4/SphericalColony.png
+	convert ../figures/Figure_4/theta_0_300_pi.tif  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_300_pi.tif
+	convert ../figures/Figure_4/theta_0_600_pi.tif  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_600_pi.tif
+	convert ../figures/Figure_4/theta_0_900_pi.tif  -crop 1800x1400+0+200 +repage ../figures/Figure_4/theta_0_900_pi.tif
+	convert ../figures/Figure_4/SphericalColony.tif -crop 1800x1400+0+200 +repage ../figures/Figure_4/SphericalColony.tif
 	#
-	convert ../figures/Figure_4/theta_0_300_pi.png  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.15 π"   ../figures/Figure_4/theta_0_300_pi.png
-	convert ../figures/Figure_4/theta_0_600_pi.png  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.30 π"   ../figures/Figure_4/theta_0_600_pi.png
-	convert ../figures/Figure_4/theta_0_900_pi.png  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.45 π"   ../figures/Figure_4/theta_0_900_pi.png
-	convert ../figures/Figure_4/SphericalColony.png -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Spherical colony" ../figures/Figure_4/SphericalColony.png
+	convert ../figures/Figure_4/theta_0_300_pi.tif  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.15 π"   ../figures/Figure_4/theta_0_300_pi.tif
+	convert ../figures/Figure_4/theta_0_600_pi.tif  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.30 π"   ../figures/Figure_4/theta_0_600_pi.tif
+	convert ../figures/Figure_4/theta_0_900_pi.tif  -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Θ / 2 = 0.45 π"   ../figures/Figure_4/theta_0_900_pi.tif
+	convert ../figures/Figure_4/SphericalColony.tif -gravity north -stroke none -fill black -pointsize 200 -font FreeSans -annotate 0 "Spherical colony" ../figures/Figure_4/SphericalColony.tif
 	#
-	convert ../figures/Figure_4/theta_0_300_pi.png ../figures/Figure_4/theta_0_600_pi.png ../figures/Figure_4/theta_0_900_pi.png ../figures/Figure_4/SphericalColony.png +append ../figures/Figure_4/Fig4.png
+	convert ../figures/Figure_4/theta_0_300_pi.tif ../figures/Figure_4/theta_0_600_pi.tif ../figures/Figure_4/theta_0_900_pi.tif ../figures/Figure_4/SphericalColony.tif +append ../figures/Figure_4/Fig4.tif
+	convert ../figures/Figure_4/Fig4.tif -density 900  ../figures/Figure_4/Fig4.tif
+	convert ../figures/Figure_4/Fig4.tif -compress lzw ../figures/Figure_4/Fig4.tif
 	#
-	rm ../figures/Figure_4/theta_0_300_pi.png ../figures/Figure_4/theta_0_600_pi.png ../figures/Figure_4/theta_0_900_pi.png ../figures/Figure_4/SphericalColony.png
+	rm ../figures/Figure_4/theta_0_300_pi.tif ../figures/Figure_4/theta_0_600_pi.tif ../figures/Figure_4/theta_0_900_pi.tif ../figures/Figure_4/SphericalColony.tif
 	#
 	### Analyze the adsorption rate images ###
 	#
-	convert ../figures/Figure_5/Fig5a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_5/Fig5a.png
-	convert ../figures/Figure_5/Fig5b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_5/Fig5b.png
-	convert ../figures/Figure_5/Fig5c.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "C" ../figures/Figure_5/Fig5c.png
+	convert ../figures/Figure_5/Fig5a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_5/Fig5a.tif
+	convert ../figures/Figure_5/Fig5b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_5/Fig5b.tif
+	convert ../figures/Figure_5/Fig5c.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "C" ../figures/Figure_5/Fig5c.tif
 	#
-	convert ../figures/Figure_5/Fig5a.png ../figures/Figure_5/Fig5b.png ../figures/Figure_5/Fig5c.png +append ../figures/Figure_5/Fig5.png
+	convert ../figures/Figure_5/Fig5a.tif ../figures/Figure_5/Fig5b.tif ../figures/Figure_5/Fig5c.tif +append ../figures/Figure_5/Fig5.tif
+	convert ../figures/Figure_5/Fig5.tif -density 900  ../figures/Figure_5/Fig5.tif
+	convert ../figures/Figure_5/Fig5.tif -compress lzw ../figures/Figure_5/Fig5.tif
 	#
-	rm ../figures/Figure_5/Fig5a.png ../figures/Figure_5/Fig5b.png ../figures/Figure_5/Fig5c.png
+	rm ../figures/Figure_5/Fig5a.tif ../figures/Figure_5/Fig5b.tif ../figures/Figure_5/Fig5c.tif
 	#
-	convert ../figures/Figure_S8/FigS8a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_S8/FigS8a.png
-	convert ../figures/Figure_S8/FigS8b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_S8/FigS8b.png
+	convert ../figures/Figure_S8/FigS8a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_S8/FigS8a.tif
+	convert ../figures/Figure_S8/FigS8b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_S8/FigS8b.tif
 	#
-	convert -size 950x656 xc:white ../figures/Figure_S8/FigS8a.png -composite ../figures/Figure_S8/FigS8a.png
+	convert -size 5250x3938 xc:white ../figures/Figure_S8/FigS8a.tif -composite ../figures/Figure_S8/FigS8a.tif
 	#
-	convert ../figures/Figure_S8/FigS8a.png ../figures/Figure_S8/FigS8b.png +append ../figures/Figure_S8/FigS8.png
+	convert ../figures/Figure_S8/FigS8a.tif ../figures/Figure_S8/FigS8b.tif +append ../figures/Figure_S8/FigS8.tif
+	convert ../figures/Figure_S8/FigS8.tif -density 900  ../figures/Figure_S8/FigS8.tif
+	convert ../figures/Figure_S8/FigS8.tif -compress lzw ../figures/Figure_S8/FigS8.tif
 	#
-	rm ../figures/Figure_S8/FigS8a.png ../figures/Figure_S8/FigS8b.png
+	rm ../figures/Figure_S8/FigS8a.tif ../figures/Figure_S8/FigS8b.tif
 	#
 	### Analyze the shielding effect images ###
 	#
-	convert ../figures/Figure_6/Fig6a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0     "A" ../figures/Figure_6/Fig6a.png
-	convert ../figures/Figure_6/Fig6b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate +50+0 "B" ../figures/Figure_6/Fig6b.png
-	convert ../figures/Figure_6/Fig6c.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate +50+0 "C" ../figures/Figure_6/Fig6c.png
+	convert ../figures/Figure_6/Fig6a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_6/Fig6a.tif
+	convert ../figures/Figure_6/Fig6b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_6/Fig6b.tif
+	convert ../figures/Figure_6/Fig6c.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "C" ../figures/Figure_6/Fig6c.tif
 	#
-	convert ../figures/Figure_6/Fig6a.png ../figures/Figure_6/Fig6b.png ../figures/Figure_6/Fig6c.png +append ../figures/Figure_6/Fig6.png
+	convert ../figures/Figure_6/Fig6a.tif ../figures/Figure_6/Fig6b.tif ../figures/Figure_6/Fig6c.tif +append ../figures/Figure_6/Fig6.tif
+	convert ../figures/Figure_6/Fig6.tif -density 900  ../figures/Figure_6/Fig6.tif
+	convert ../figures/Figure_6/Fig6.tif -compress lzw ../figures/Figure_6/Fig6.tif
 	#
-	rm ../figures/Figure_6/Fig6a.png ../figures/Figure_6/Fig6b.png ../figures/Figure_6/Fig6c.png
+	rm ../figures/Figure_6/Fig6a.tif ../figures/Figure_6/Fig6b.tif ../figures/Figure_6/Fig6c.tif
 	#
 	### Analyze the secondary infection images ###
 	#
-	convert ../figures/Figure_7/Fig7a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_7/Fig7a.png
-	convert ../figures/Figure_7/Fig7b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_7/Fig7b.png
-	convert ../figures/Figure_7/Fig7c.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "C" ../figures/Figure_7/Fig7c.png
-	convert ../figures/Figure_7/Fig7d.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "D" ../figures/Figure_7/Fig7d.png
+	convert ../figures/Figure_7/Fig7a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_7/Fig7a.tif
+	convert ../figures/Figure_7/Fig7b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_7/Fig7b.tif
+	convert ../figures/Figure_7/Fig7c.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "C" ../figures/Figure_7/Fig7c.tif
+	convert ../figures/Figure_7/Fig7d.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "D" ../figures/Figure_7/Fig7d.tif
 	#
-	convert ../figures/Figure_7/Fig7c.png ../figures/Figure_7/Fig7d.png -append ../figures/Figure_7/Fig7cd.png
+	convert ../figures/Figure_7/Fig7c.tif ../figures/Figure_7/Fig7d.tif -append ../figures/Figure_7/Fig7cd.tif
 	#
-	convert ../figures/Figure_7/Fig7a.png ../figures/Figure_7/Fig7b.png ../figures/Figure_7/Fig7cd.png +append ../figures/Figure_7/Fig7.png
+	convert ../figures/Figure_7/Fig7a.tif ../figures/Figure_7/Fig7b.tif ../figures/Figure_7/Fig7cd.tif +append ../figures/Figure_7/Fig7.tif
+	convert ../figures/Figure_7/Fig7.tif -density 900  ../figures/Figure_7/Fig7.tif
+	convert ../figures/Figure_7/Fig7.tif -compress lzw ../figures/Figure_7/Fig7.tif
 	#
-	rm ../figures/Figure_7/Fig7a.png ../figures/Figure_7/Fig7b.png ../figures/Figure_7/Fig7c.png ../figures/Figure_7/Fig7d.png ../figures/Figure_7/Fig7cd.png
+	rm ../figures/Figure_7/Fig7a.tif ../figures/Figure_7/Fig7b.tif ../figures/Figure_7/Fig7c.tif ../figures/Figure_7/Fig7d.tif ../figures/Figure_7/Fig7cd.tif
 	#
-	convert ../figures/Figure_8/Fig8a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_8/Fig8a.png
-	convert ../figures/Figure_8/Fig8b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_8/Fig8b.png
+	convert ../figures/Figure_8/Fig8a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_8/Fig8a.tif
+	convert ../figures/Figure_8/Fig8b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_8/Fig8b.tif
 	#
-	convert ../figures/Figure_8/Fig8a.png ../figures/Figure_8/Fig8b.png +append ../figures/Figure_8/Fig8.png
+	convert ../figures/Figure_8/Fig8a.tif ../figures/Figure_8/Fig8b.tif +append ../figures/Figure_8/Fig8.tif
+	convert ../figures/Figure_8/Fig8.tif -density 900  ../figures/Figure_8/Fig8.tif
+	convert ../figures/Figure_8/Fig8.tif -compress lzw ../figures/Figure_8/Fig8.tif
 	#
-	rm ../figures/Figure_8/Fig8a.png ../figures/Figure_8/Fig8b.png
+	rm ../figures/Figure_8/Fig8a.tif ../figures/Figure_8/Fig8b.tif
 	#
 	### Chain characterization ###
 	#
-	convert ../figures/Figure_S3/FigS3a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_S3/FigS3a.png
-	convert ../figures/Figure_S3/FigS3b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_S3/FigS3b.png
+	convert ../figures/Figure_S3/FigS3a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_S3/FigS3a.tif
+	convert ../figures/Figure_S3/FigS3b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_S3/FigS3b.tif
 	#
-	convert ../figures/Figure_S3/FigS3a.png ../figures/Figure_S3/FigS3b.png +append ../figures/Figure_S3/FigS3.png
+	convert ../figures/Figure_S3/FigS3a.tif ../figures/Figure_S3/FigS3b.tif +append ../figures/Figure_S3/FigS3.tif
+	convert ../figures/Figure_S3/FigS3.tif -density 900  ../figures/Figure_S3/FigS3.tif
+	convert ../figures/Figure_S3/FigS3.tif -compress lzw ../figures/Figure_S3/FigS3.tif
 	#
-	rm ../figures/Figure_S3/FigS3a.png ../figures/Figure_S3/FigS3b.png
+	rm ../figures/Figure_S3/FigS3a.tif ../figures/Figure_S3/FigS3b.tif
 	#
-	convert ../figures/Figure_S4/FigS4a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_S4/FigS4a.png
-	convert ../figures/Figure_S4/FigS4b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_S4/FigS4b.png
+	convert ../figures/Figure_S4/FigS4a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_S4/FigS4a.tif
+	convert ../figures/Figure_S4/FigS4b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_S4/FigS4b.tif
 	#
-	convert ../figures/Figure_S4/FigS4a.png ../figures/Figure_S4/FigS4b.png +append ../figures/Figure_S4/FigS4.png
+	convert ../figures/Figure_S4/FigS4a.tif ../figures/Figure_S4/FigS4b.tif +append ../figures/Figure_S4/FigS4.tif
+	convert ../figures/Figure_S4/FigS4.tif -density 900  ../figures/Figure_S4/FigS4.tif
+	convert ../figures/Figure_S4/FigS4.tif -compress lzw ../figures/Figure_S4/FigS4.tif
 	#
-	rm ../figures/Figure_S4/FigS4a.png ../figures/Figure_S4/FigS4b.png
+	rm ../figures/Figure_S4/FigS4a.tif ../figures/Figure_S4/FigS4b.tif
 	#
-	convert ../figures/Figure_S5/FigS5a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_S5/FigS5a.png
-	convert ../figures/Figure_S5/FigS5b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_S5/FigS5b.png
-	convert ../figures/Figure_S5/FigS5c.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "C" ../figures/Figure_S5/FigS5c.png
+	convert ../figures/Figure_S5/FigS5a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_S5/FigS5a.tif
+	convert ../figures/Figure_S5/FigS5b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_S5/FigS5b.tif
+	convert ../figures/Figure_S5/FigS5c.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "C" ../figures/Figure_S5/FigS5c.tif
 	#
-	convert ../figures/Figure_S5/FigS5a.png ../figures/Figure_S5/FigS5b.png ../figures/Figure_S5/FigS5c.png +append ../figures/Figure_S5/FigS5.png
+	convert ../figures/Figure_S5/FigS5a.tif ../figures/Figure_S5/FigS5b.tif ../figures/Figure_S5/FigS5c.tif +append ../figures/Figure_S5/FigS5.tif
+	convert ../figures/Figure_S5/FigS5.tif -density 900  ../figures/Figure_S5/FigS5.tif
+	convert ../figures/Figure_S5/FigS5.tif -compress lzw ../figures/Figure_S5/FigS5.tif
 	#
-	rm ../figures/Figure_S5/FigS5a.png ../figures/Figure_S5/FigS5b.png ../figures/Figure_S5/FigS5c.png
+	rm ../figures/Figure_S5/FigS5a.tif ../figures/Figure_S5/FigS5b.tif ../figures/Figure_S5/FigS5c.tif
 	#
 	### Equilibriate testing ###
 	#
-	convert ../figures/Figure_S9/FigS9a.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "A" ../figures/Figure_S9/FigS9a.png
-	convert ../figures/Figure_S9/FigS9b.png -gravity northwest -stroke none -fill black -pointsize 64 -annotate 0 "B" ../figures/Figure_S9/FigS9b.png
+	convert ../figures/Figure_S9/FigS9a.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "A" ../figures/Figure_S9/FigS9a.tif
+	convert ../figures/Figure_S9/FigS9b.tif -gravity northwest -stroke none -fill black -pointsize 384 -annotate +0+0 "B" ../figures/Figure_S9/FigS9b.tif
 	#
-	convert ../figures/Figure_S9/FigS9a.png ../figures/Figure_S9/FigS9b.png +append ../figures/Figure_S9/FigS9.png
+	convert ../figures/Figure_S9/FigS9a.tif ../figures/Figure_S9/FigS9b.tif +append ../figures/Figure_S9/FigS9.tif
+	convert ../figures/Figure_S9/FigS9.tif -density 900  ../figures/Figure_S9/FigS9.tif
+	convert ../figures/Figure_S9/FigS9.tif -compress lzw ../figures/Figure_S9/FigS9.tif
 	#
-	rm ../figures/Figure_S9/FigS9a.png ../figures/Figure_S9/FigS9b.png
+	rm ../figures/Figure_S9/FigS9a.tif ../figures/Figure_S9/FigS9b.tif
 	#
+	### Make a PNG copy of .tif images ###
+	find .. -name '*.tif' -print0 | xargs -0 -r mogrify -resize 25% -format png
 
 clean :
 	rm -f Simulation.o
